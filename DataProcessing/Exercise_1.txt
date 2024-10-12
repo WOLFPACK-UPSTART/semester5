@@ -1,0 +1,119 @@
+Creating Maven Project:
+
+mvn archetype:generate -DgroupId=com.example.SocketWordCount -DartifactId=SocketWordCount -DarchetypeArtifactId=maven-archetype-quickstart -DInteractiveMode=False
+--------------------------------------------------------------
+cd SocketWordCount
+--------------------------------------------------------------
+ C:/SocketWordCount/pom.xml:
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+http://maven.apache.org/xsd/maven-4.0.0.xsd"> 
+<modelVersion>4.0.0</modelVersion> 
+<groupId>com.example.SocketWordCount</groupId> 
+<artifactId>SocketWordCount</artifactId> 
+<packaging>jar</packaging> 
+<version>1.0-SNAPSHOT</version> 
+<name>SocketWordCount</name> 
+<url>http://maven.apache.org</url> 
+<properties> 
+<maven.compiler.source>1.8</maven.compiler.source> 
+<maven.compiler.target>1.8</maven.compiler.target> 
+</properties> 
+<dependencies> 
+<dependency> 
+<groupId>junit</groupId> 
+<artifactId>junit</artifactId> 
+<version>3.8.1</version> 
+<scope>test</scope> 
+</dependency> 
+<dependency> 
+<groupId>org.apache.flink</groupId> 
+<artifactId>flink-java</artifactId> 
+<version>1.18.0</version> 
+</dependency> 
+<dependency> 
+<groupId>org.apache.flink</groupId> 
+<artifactId>flink-streaming-java</artifactId> 
+<version>1.19.1</version> <!-- Update to match your 
+Flink version --> 
+<scope>provided</scope> 
+</dependency> 
+</dependencies> 
+<build> 
+<plugins> 
+<plugin> 
+<groupId>org.apache.maven.plugins</groupId> 
+<artifactId>maven-compiler-plugin</artifactId> 
+<version>3.8.1</version> 
+<configuration> 
+<source>1.8</source> 
+<target>1.8</target> 
+</configuration> 
+</plugin> 
+<plugin> 
+<groupId>org.apache.maven.plugins</groupId> 
+<artifactId>maven-jar-plugin</artifactId> 
+<version>3.2.0</version> 
+<configuration> 
+<archive> 
+<manifest> 
+<addClasspath>true</addClasspath> 
+<mainClass>com.example.SocketWordCount.SocketWordCount</mainClass> 
+</manifest> 
+</archive> 
+</configuration> 
+</plugin> 
+</plugins> 
+</build> 
+</project>
+--------------------------------------------------------------
+Go to the C:\SocketWordCount\src\main\java\com\example\SocketWordCount\ App.java and rename SocketWordCount.java
+
+package com.example.SocketWordCount; 
+import org.apache.flink.api.common.functions.FlatMapFunction; 
+import org.apache.flink.api.java.tuple.Tuple2; 
+import org.apache.flink.streaming.api.datastream.DataStream; 
+import 
+org.apache.flink.streaming.api.environment.StreamExecutionEnvironment; 
+import org.apache.flink.util.Collector; 
+public class SocketWordCount { 
+public static void main(String[] args) throws Exception { 
+// Set up the execution environment 
+final StreamExecutionEnvironment env = 
+StreamExecutionEnvironment.getExecutionEnvironment(); 
+// Connect to the socket server on localhost:9999 
+DataStream<String> text = env.socketTextStream("localhost", 9999); 
+// Parse the data, group by word, and aggregate the counts 
+DataStream<Tuple2<String, Integer>> counts = text 
+.flatMap(new Tokenizer()) 
+.keyBy(value -> value.f0) 
+.sum(1); 
+// Print the result to the console 
+counts.print(); 
+// Execute the program 
+env.execute("Socket WordCount Example"); 
+} 
+// User-defined function to split lines into words 
+public static final class Tokenizer implements FlatMapFunction<String, 
+Tuple2<String, Integer>> { 
+@Override 
+public void flatMap(String value, Collector<Tuple2<String, 
+Integer>> out) { 
+// Normalize and split the line into words 
+String[] tokens = value.toLowerCase().split("\\W+"); 
+// Emit the words with a count of 1 
+for (String token : tokens) { 
+if (token.length() > 0) { 
+out.collect(new Tuple2<>(token, 1)); 
+} 
+} 
+} 
+} 
+}
+--------------------------------------------------------------
+C:/SocketWordCount> mvn clean install (or) mvn clean package (or) mvn clean compile
+--------------------------------------------------------------
+C:/SocketWordCount/target/SocketWordCount-1.0-SNAPSHOT.jar copy and paste to C:/
+--------------------------------------------------------------
