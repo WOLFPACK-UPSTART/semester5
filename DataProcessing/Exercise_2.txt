@@ -1,0 +1,28 @@
+1. Install the given java file by double clicking on it
+
+2. Assuming that the kafka file is extracted and stored in downloads folder as below
+
+C:\Users\USER-PC\Downloads\kafka\bin\windows
+
+3. Copy the above address and press enter. Now you will be in above folder then select above address and type as cmd
+
+4. Now a command prompt will be opened and paste the following command then press enter
+
+zookeeper-server-start.bat ..\..\config\zookeeper.properties
+
+5. Again open fresh file explorer as C:\Users\USER-PC\Downloads\kafka\bin\windows and paste the following command then press enter
+
+kafka-server-start.bat ..\..\config\server.properties
+
+6.Again open fresh file explorer as C:\Users\USER-PC\Downloads\kafka\bin\windows and paste the following command then press enter
+
+kafka-topics.bat --create --topic my-topic --bootstrap-server localhost:9092 --replication-factor 1 --partitions 3
+
+7.Again open fresh file explorer as C:\Users\USER-PC\Downloads\kafka\bin\windows and paste the following command then press enter
+
+kafka-console-producer.bat --broker-list localhost:9092 --topic my-topic
+
+8. Again open fresh file explorer as C:\Users\USER-PC\Downloads\kafka\bin\windows and paste the following command then press enter
+kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic my-topic --from-beginning
+
+9. Now type any statement in the command prompt which was opened in step7 now the message will be passed to the command prompt in opened in step8
