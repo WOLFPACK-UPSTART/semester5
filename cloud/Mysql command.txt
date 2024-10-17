@@ -1,0 +1,4 @@
+sudo dnf update -y
+sudo dnf install mariadb105
+mysql -h (endpoint) -P 3306 -u admin -p
+
