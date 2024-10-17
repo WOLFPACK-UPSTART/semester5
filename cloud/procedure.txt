@@ -1,0 +1,370 @@
+Here’s the **detailed content** for each experiment, with about **one and a half pages** of description per experiment. Each section will have the **aim**, **detailed procedure**, and **expected result**.
+
+---
+
+### **1. Creating a Virtual Server in AWS Public Cloud**
+
+#### **Aim**:
+To create and configure a virtual server (EC2 instance) in the AWS public cloud for running applications or hosting services.
+
+#### **Procedure**:
+
+1. **Log in to AWS Console**:
+   - Open the AWS Management Console by visiting [aws.amazon.com](https://aws.amazon.com).
+   - Sign in with your credentials. If you don’t have an account, create one.
+
+2. **Navigate to EC2 Dashboard**:
+   - After logging in, locate the **Services** menu at the top-left corner and choose **EC2** under "Compute".
+   - You’ll be taken to the EC2 Dashboard, where you can see your running instances and other resources.
+
+3. **Launch a New Instance**:
+   - Click on **Launch Instance** to open the instance creation wizard.
+   - Choose an **Amazon Machine Image (AMI)** based on your requirements. For a simple Linux server, you can select **Amazon Linux 2 AMI** or **Ubuntu Server 20.04 LTS**. For a Windows server, select **Microsoft Windows Server** AMI.
+
+4. **Choose an Instance Type**:
+   - In the next step, choose the instance type that matches your needs. For beginners or small workloads, **t2.micro** (which is free-tier eligible) is a good choice. This instance comes with 1 vCPU and 1 GB of RAM.
+   - Click **Next** to configure further instance details.
+
+5. **Configure Instance Details**:
+   - Leave most settings at their default unless you need to place the instance in a specific **VPC** or **subnet**.
+   - If your application requires multiple instances for scalability, adjust the number of instances here.
+   - For advanced configurations, you can enable auto-scaling, spot instances, or specify additional IAM roles and policies.
+
+6. **Add Storage**:
+   - By default, AWS allocates 8 GB of **Elastic Block Store (EBS)** as root storage.
+   - If your application needs more storage, you can increase this by modifying the size or adding additional EBS volumes.
+
+7. **Configure Security Group**:
+   - A **security group** is a virtual firewall that controls inbound and outbound traffic to your instance.
+   - Create a new security group or use an existing one. Ensure that **SSH (port 22)** is open if you’re using Linux or **RDP (port 3389)** for Windows, and optionally open **HTTP/HTTPS** ports (80/443) if you're planning to host a web application.
+   - Review your settings and ensure your security group does not allow unrestricted access from all IP addresses (0.0.0.0/0) for better security.
+
+8. **Launch and Key Pair**:
+   - Choose an **existing key pair** or create a new one to securely access your instance.
+   - If creating a new key pair, make sure to download the **private key (.pem file)**, as it will be required for SSH access later.
+   - Confirm the settings and click **Launch** to spin up your instance.
+
+9. **Monitor and Access the Instance**:
+   - Go back to the **EC2 Dashboard** to view your instance’s status. The instance will go through various states like **pending** and then finally **running**.
+   - Copy the **public IP address** or **DNS name** of the instance, as this will be used to access it.
+
+10. **Access the Instance**:
+   - For Linux instances, use **SSH** to connect to the server. For example, use the following command from your terminal or command prompt:
+     ```bash
+     ssh -i /path/to/your-key.pem ec2-user@your-instance-public-ip
+     ```
+   - For Windows instances, use **Remote Desktop Protocol (RDP)**. Download an RDP client and enter the public IP to connect.
+
+#### **Result**:
+The virtual server was successfully created and is now running. The EC2 instance can be accessed remotely, and applications can be deployed or hosted on the instance.
+
+---
+
+### **2. Attaching AWS EBS Volume to Amazon EC2**
+
+#### **Aim**:
+To attach an **Amazon Elastic Block Store (EBS)** volume to an existing EC2 instance in AWS to provide additional storage for applications.
+
+#### **Procedure**:
+
+1. **Log in to AWS Console**:
+   - Open the AWS Management Console and navigate to **EC2** from the Services menu.
+
+2. **Create an EC2 Instance** (If not already created):
+   - If you don't have an EC2 instance running, follow the procedure from Experiment 1 to create and launch a new instance.
+   - Make sure the instance is in the **running state**.
+
+3. **Navigate to EC2 Dashboard**:
+   - Go to the **EC2 Dashboard** and look for the **Elastic Block Store (EBS)** section on the left sidebar.
+   - Click on **Volumes** to view and manage your existing EBS volumes.
+
+4. **Create a New EBS Volume**:
+   - Click on **Create Volume** to initiate a new storage volume.
+   - Choose a **volume type** based on performance needs:
+     - **General Purpose SSD (gp2/gp3)**: For most workloads.
+     - **Provisioned IOPS SSD**: For high-performance storage.
+     - **Magnetic (standard)**: For cost-effective storage with slower access speeds.
+   - Specify the **size** of the volume (e.g., 10 GB).
+   - Select the **Availability Zone** that matches the zone where your EC2 instance resides (e.g., us-east-1a).
+   - Click **Create Volume**.
+
+5. **Attach the EBS Volume to the EC2 Instance**:
+   - After the volume is created, select it and click on **Actions**, then choose **Attach Volume**.
+   - In the **Instance** field, select the EC2 instance to which you want to attach the volume.
+   - Specify the **device path** (e.g., /dev/xvdf for Linux) and click **Attach**.
+
+6. **SSH into the EC2 Instance**:
+   - Use SSH to connect to your EC2 instance. If you have already connected to the instance, proceed to the next step.
+
+7. **Verify the EBS Volume is Attached**:
+   - Run the following command to list all the available block devices:
+     ```bash
+     lsblk
+     ```
+   - You should see the newly attached volume listed as **/dev/xvdf** (or the path you specified).
+
+8. **Format the Volume** (Linux Example):
+   - Format the new volume using the **ext4** file system:
+     ```bash
+     sudo mkfs -t ext4 /dev/xvdf
+     ```
+
+9. **Mount the Volume**:
+   - Create a new directory where you will mount the volume:
+     ```bash
+     sudo mkdir /mnt/data
+     ```
+   - Mount the new volume:
+     ```bash
+     sudo mount /dev/xvdf /mnt/data
+     ```
+
+10. **Verify the Mount**:
+   - Run the following command to ensure the volume is mounted:
+     ```bash
+     df -h
+     ```
+   - You should see the new volume listed as mounted under **/mnt/data**.
+
+#### **Result**:
+The EBS volume was successfully attached to the EC2 instance, formatted, and mounted. It is now available for storing data and running applications that require additional storage.
+
+---
+
+### **3. Hosting Web Application in Cloud**
+
+#### **Aim**:
+To host a web application on a cloud-based EC2 instance in AWS and make it accessible through a public IP or domain.
+
+#### **Procedure**:
+
+1. **Create an EC2 Instance**:
+   - Launch an EC2 instance using the procedure from Experiment 1.
+   - Ensure that **port 80 (HTTP)** and **port 443 (HTTPS)** are open in the **security group**.
+
+2. **Connect to the Instance**:
+   - Use SSH to connect to the EC2 instance:
+     ```bash
+     ssh -i /path/to/your-key.pem ec2-user@your-instance-public-ip
+     ```
+
+3. **Update the System**:
+   - Once logged in, update the system packages to ensure everything is up to date:
+     ```bash
+     sudo yum update -y
+     ```
+
+4. **Install a Web Server (Apache)**:
+   - Install **Apache HTTP Server**:
+     ```bash
+     sudo yum install httpd -y
+     ```
+   - Start the Apache server:
+     ```bash
+     sudo systemctl start httpd
+     ```
+   - Enable Apache to start on boot:
+     ```bash
+     sudo systemctl enable httpd
+     ```
+
+5. **Deploy the Web Application**:
+   - Create or upload your web application files (HTML, CSS, JS) to the server.
+   - The default directory for Apache is **/var/www/html/**.
+   - For example, to deploy a simple web page, create an **index.html** file in the Apache directory:
+     ```bash
+     sudo nano /var/www/html/index.html
+     ```
+     Add some sample content like:
+     ```html
+     <html>
+     <head><title>Welcome to My Web App</title></head>
+     <body><h1>Welcome to My Web Application Hosted on AWS!</h1></body>
+     </html>
+     ```
+   - Save and exit the file.
+
+6. **Configure File Permissions**:
+   - Ensure
+
+ that Apache has the correct permissions to access the web directory:
+     ```bash
+     sudo chown -R apache:apache /var/www/html
+     sudo chmod -R 755 /var/www/html
+     ```
+
+7. **Test the Web Application**:
+   - Open a web browser and go to your EC2 instance’s public IP (e.g., http://your-public-ip).
+   - You should see the web application running.
+
+#### **Result**:
+The web application was successfully deployed and hosted on the AWS EC2 instance, and is accessible through the instance’s public IP address.
+
+---
+
+### **4. Attaching Additional Virtual Servers to Existing Application**
+
+#### **Aim**:
+To scale a cloud application by attaching additional EC2 instances (virtual servers) to the existing infrastructure and enabling load balancing.
+
+#### **Procedure**:
+
+1. **Launch Additional EC2 Instances**:
+   - Follow the procedure from Experiment 1 to create additional EC2 instances that will be used for load balancing.
+   - Ensure that all instances are in the same **VPC** and that the same **security group** rules (HTTP, SSH, etc.) are applied.
+
+2. **Install and Configure the Web Application**:
+   - SSH into each of the new instances and deploy the same web application as the original instance.
+   - Ensure the application is running correctly on each instance.
+
+3. **Set Up an Elastic Load Balancer (ELB)**:
+   - Navigate to the **EC2 Dashboard** and click on **Load Balancers**.
+   - Click on **Create Load Balancer** and select **Application Load Balancer**.
+   - Name the load balancer and choose the **VPC** and **subnets** that your instances are located in.
+   - Configure **listeners** for **HTTP (port 80)** and **HTTPS (port 443)** if needed.
+   - Click **Next** to configure security settings.
+
+4. **Configure Target Group**:
+   - Create a **target group** where the EC2 instances will be registered.
+   - Choose **instance-based** targets and add your EC2 instances to the group.
+   - Configure the **health checks** to ensure the instances are running and accessible.
+
+5. **Register Instances with the Load Balancer**:
+   - Add all the instances you created to the load balancer’s target group.
+   - Set up a rule to forward traffic to these instances based on round-robin or least connections.
+
+6. **Test Load Balancer**:
+   - After the load balancer is created and configured, it will have a **DNS name** (e.g., http://my-load-balancer-1234567890.us-east-1.elb.amazonaws.com).
+   - Access this DNS name in your web browser, and the load balancer will distribute traffic to the attached EC2 instances.
+
+#### **Result**:
+Additional virtual servers were successfully attached to the existing application, and traffic is now distributed across multiple EC2 instances using the Elastic Load Balancer.
+
+---
+
+### **5. Hosting a Static Webpage**
+
+#### **Aim**:
+To host a static website using Amazon S3, leveraging its simple storage capabilities to serve web content like HTML, CSS, and JavaScript files.
+
+#### **Procedure**:
+
+1. **Navigate to S3**:
+   - Log in to the AWS Management Console and search for **S3** in the Services menu.
+   - S3 (Simple Storage Service) provides scalable object storage with easy-to-use interfaces.
+
+2. **Create an S3 Bucket**:
+   - Click on **Create Bucket**.
+   - Give the bucket a globally unique name (e.g., my-static-website-bucket).
+   - Select the appropriate region (e.g., **us-east-1**).
+   - Leave other settings as default, but ensure **Block all public access** is disabled if you want the website to be publicly accessible.
+
+3. **Upload Website Files**:
+   - Click on the bucket name to enter it, then click **Upload**.
+   - Upload your **index.html** file along with any other assets such as CSS or JavaScript files.
+   - Ensure the files have the correct permissions for public access.
+
+4. **Enable Static Website Hosting**:
+   - Go to the **Properties** tab in the bucket and scroll down to **Static Website Hosting**.
+   - Enable static hosting and specify **index.html** as the default document.
+   - Optionally, specify an **error document** if your site needs custom error handling.
+
+5. **Set Permissions**:
+   - Open the **Permissions** tab of the bucket.
+   - Add a **bucket policy** to make the website publicly accessible:
+     ```json
+     {
+       "Version": "2012-10-17",
+       "Statement": [
+         {
+           "Effect": "Allow",
+           "Principal": "*",
+           "Action": "s3:GetObject",
+           "Resource": "arn:aws:s3:::my-static-website-bucket/*"
+         }
+       ]
+     }
+     ```
+   - Save the changes.
+
+6. **Access the Static Website**:
+   - After enabling static website hosting, AWS will provide a **website endpoint** (e.g., http://my-static-website-bucket.s3-website-us-east-1.amazonaws.com).
+   - Visit this endpoint in your browser to see your static website live.
+
+#### **Result**:
+The static webpage was successfully hosted using Amazon S3, and it is accessible via the public S3 website endpoint.
+
+---
+
+### **6. Create a VPC (Virtual Private Cloud)**
+
+#### **Aim**:
+To create a **Virtual Private Cloud (VPC)** in AWS and configure it with subnets, internet gateways, and route tables to enable communication and resource hosting.
+
+#### **Procedure**:
+
+1. **Navigate to VPC Dashboard**:
+   - In the AWS Console, go to the **VPC** service under the Networking section.
+
+2. **Create a VPC**:
+   - Click on **Create VPC**.
+   - Define the **IPv4 CIDR block** for the VPC. This defines the range of IP addresses that resources within the VPC can use. For example, you can specify **10.0.0.0/16**.
+   - Select **IPv6 CIDR block** if needed (optional).
+   - Assign a name to the VPC and select default settings for other options.
+   - Click **Create VPC**.
+
+3. **Create Subnets**:
+   - Subnets divide the VPC’s IP address space into smaller ranges and are essential for placing instances in different **Availability Zones**.
+   - Click on **Create Subnet**.
+   - Select the newly created VPC.
+   - Define a subnet for each **Availability Zone** (e.g., **us-east-1a**).
+   - Provide a **CIDR block** for each subnet, like **10.0.1.0/24** for Subnet A and **10.0.2.0/24** for Subnet B.
+   - Create multiple subnets if necessary.
+
+4. **Create an Internet Gateway**:
+   - Click on **Internet Gateways** in the left-hand menu and select **Create Internet Gateway**.
+   - Name the gateway (e.g., my-internet-gateway).
+   - Attach it to the VPC you created in the previous step.
+
+5. **Create Route Tables**:
+   - Route tables define how traffic is routed between different subnets and the internet.
+   - Click on **Create Route Table**, select your VPC, and name the route table (e.g., public-route-table).
+   - In the **Routes** section, add a route to allow traffic to the internet. Set the destination to **0.0.0.0/0** and the target to your **Internet Gateway**.
+
+6. **Associate Subnets with the Route Table**:
+   - Under the **Subnet Associations** tab, associate your public subnet with the route table.
+
+7. **Launch Instances in the VPC**:
+   - Now that the VPC is set up, you can launch EC2 instances inside the VPC by selecting the created subnets during instance configuration.
+
+#### **Result**:
+A VPC was successfully created with configured subnets, an Internet Gateway, and route tables, providing a secure and isolated network for launching resources.
+
+---
+
+### **7. Creating MySQL Instances**
+
+#### **Aim**:
+To create and configure a **MySQL database instance** using **Amazon RDS (Relational Database Service)**.
+
+#### **Procedure**:
+
+1. **Navigate to RDS Dashboard**:
+   - In the AWS Console, search for and navigate to **RDS** under the Database section.
+
+2. **Create a New Database**:
+   - Click on **Create Database**.
+   - In the **Database Creation Method**, select **Standard Create** to manually configure the database settings.
+   - Choose **MySQL** as the engine.
+   - Select a version of MySQL (e.g., **MySQL 8.0.23**).
+
+3. **Configure Database Settings**:
+   - Choose the **DB Instance Class** based on your resource needs. For light usage, select **db.t2.micro** (free-tier eligible).
+   - Specify the **allocated storage** size (e.g., 20 GB).
+   - Configure the **DB Identifier**, which is the unique name for your database instance (e.g., my-mysql-db).
+   - Set the **master username** and **password** for your database.
+
+4. **Network and Security Settings**:
+   - Choose the VPC where the RDS instance will be deployed. If you created a custom VPC, select that here.
+   - Create or select a **subnet group** for your database instance.
+   - Choose **Public Accessibility** if you want the DB to be accessible from outside the VPC (not recommended for production environments
