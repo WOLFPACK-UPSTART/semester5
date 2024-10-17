@@ -2,6 +2,6 @@ lsblk
 sudo su
 file -s /dev/xvdf
 mkfs  -t xfs /dev/xvdf
-mksf -s /dev/xvdf
+mkfs -s /dev/xvdf
 mkdir -p /app/volume
 df -h 
