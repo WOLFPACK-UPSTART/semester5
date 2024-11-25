@@ -1,0 +1,28 @@
+ipconfig
+ipconfig /all
+ipconfig /renew
+
+ping -t 10.1.42.140
+ping -a 10.1.42.140
+ping -h
+ping -l size 10.1.42.140
+ping -n 5 google.com
+
+windump -D
+windump -i 1
+windump -i 1 port 80
+windump -i 1 -w C:\net\fcap.pcap
+
+tracert
+tracert -d 10.1.42.140
+tracert -w 2000 www.google.com
+tracert -d www.google.com
+tracert -4 www.google.com
+
+netstat -a 10.1.42.140
+netstat -h
+netstat -n
+netstat -o
+netstat -s
+
+nslookup
