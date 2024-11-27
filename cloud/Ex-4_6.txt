@@ -1,0 +1,62 @@
+Procedure from Exercise 4: 
+Scale and Load Balance Your Architecture
+
+Set Up the Environment:
+
+Prepare a cloud environment with necessary resources, such as instances and databases.
+Define the requirements for scaling and load balancing.
+Configure Auto Scaling:
+
+Use Auto Scaling Groups (ASGs) to automatically add or remove instances based on demand.
+Set scaling policies, triggers, and alarms (e.g., CPU utilization or traffic thresholds).
+Set Up a Load Balancer:
+
+Deploy a load balancer (e.g., AWS Elastic Load Balancer or similar in your chosen cloud provider).
+Configure routing rules and associate the load balancer with your instances.
+Test the Configuration:
+
+Simulate traffic to ensure the system scales correctly.
+Verify that the load balancer distributes traffic evenly across instances.
+Monitor and Optimize:
+
+Use monitoring tools to analyze performance.
+Adjust configurations for better efficiency and cost-effectiveness.
+_________________________________________
+
+Procedure from Exercise 6: 
+Create a VPC
+This document provides a detailed procedure for creating a Virtual Private Cloud (VPC) and associated resources. Here's the summarized procedure:
+
+Access the Amazon VPC Console:
+
+Go to Amazon VPC Console.
+Navigate to the VPC dashboard and choose Create VPC.
+Configure VPC Settings:
+
+Name Tags: Use auto-generated or custom name tags for resources.
+IPv4 CIDR Block: Enter a valid IPv4 address range.
+(Optional) IPv6 CIDR Block: Enable support for IPv6 traffic.
+Set Tenancy:
+
+Choose between Default (shared hardware) or Dedicated (dedicated hardware) tenancy.
+Specify Availability Zones and Subnets:
+
+Choose at least two Availability Zones (AZs) for a production environment.
+Configure the number of public and private subnets and their CIDR blocks.
+Add Additional Resources:
+
+NAT Gateways: Deploy for private subnets needing internet access.
+Egress-only Internet Gateway: Enable for IPv6 traffic if required.
+VPC Endpoints: Configure if direct access to Amazon S3 or other services is needed.
+Tagging and DNS Options:
+
+Add tags for resource identification.
+Enable or disable domain name resolution as per requirements.
+Review and Create:
+
+Visualize the resource relationships in the Preview pane.
+Choose Create VPC to finalize.
+Post-Creation Tasks:
+
+View the created VPC resources.
+Optionally, terminate the VPC if no longer needed.
