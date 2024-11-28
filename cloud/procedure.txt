@@ -207,7 +207,7 @@ The web application was successfully deployed and hosted on the AWS EC2 instance
 #### **Aim**:
 To scale a cloud application by attaching additional EC2 instances (virtual servers) to the existing infrastructure and enabling load balancing.
 
-#### **Procedure**:
+#### **Procedure**:      https://docs.aws.amazon.com/pdfs/elasticloadbalancing/latest/application/elb-ag.pdf     - 16
 
 1. **Launch Additional EC2 Instances**:
    - Follow the procedure from Experiment 1 to create additional EC2 instances that will be used for load balancing.
@@ -301,7 +301,7 @@ The static webpage was successfully hosted using Amazon S3, and it is accessible
 #### **Aim**:
 To create a **Virtual Private Cloud (VPC)** in AWS and configure it with subnets, internet gateways, and route tables to enable communication and resource hosting.
 
-#### **Procedure**:
+#### **Procedure**:         https://docs.aws.amazon.com/pdfs/vpc/latest/userguide/vpc-ug.pdf    - 98
 
 1. **Navigate to VPC Dashboard**:
    - In the AWS Console, go to the **VPC** service under the Networking section.
